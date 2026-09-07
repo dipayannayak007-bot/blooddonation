@@ -11,6 +11,13 @@ A web-based blood donation platform designed to help connect blood donors with p
 - 🚨 Support for urgent blood requirements
 - 💻 Responsive and user-friendly frontend
 
+## 🔄 How It Works
+
+1. **Register** as a blood donor.
+2. **Search** for donors based on blood group and location.
+3. **Connect** with a suitable donor when blood is needed.
+4. **Donate** blood and help save a life. ❤️
+
 ## 🛠️ Tech Stack
 
 - **Frontend:** HTML, CSS, JavaScript / React (as implemented in the project)
