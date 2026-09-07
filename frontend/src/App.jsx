@@ -12,9 +12,9 @@ export default function App() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [isRegisteringHospital, setIsRegisteringHospital] = useState(false);
 
-  // Login Form State
+  // Keep login fields controlled so validation and reset behavior stay predictable.
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); // <-- Added password state
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState("donor");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ export default function App() {
         "https://pulsenode-backend.onrender.com/api/auth/login",
         {
           email: email,
-          password: password, // <-- Sends password to backend
+          password: password,
           role: role,
         },
       );
@@ -85,7 +85,10 @@ export default function App() {
 
           <form onSubmit={handleLogin} className="space-y-5">
             {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded text-sm border border-red-200">
+              <div
+                role="alert"
+                className="bg-red-50 text-red-600 p-3 rounded text-sm border border-red-200"
+              >
                 {error}
               </div>
             )}
@@ -97,6 +100,7 @@ export default function App() {
               <input
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your registered email"
@@ -104,7 +108,6 @@ export default function App() {
               />
             </div>
 
-            {/* Added Password Field */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">
                 Password
@@ -112,6 +115,7 @@ export default function App() {
               <input
                 type="password"
                 required
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
@@ -136,6 +140,7 @@ export default function App() {
             <button
               type="submit"
               disabled={loading}
+              aria-busy={loading}
               className={`w-full py-3 mt-4 text-white rounded-lg font-bold transition shadow-md ${
                 loading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
               }`}
