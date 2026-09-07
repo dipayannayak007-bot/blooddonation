@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+/* Global page defaults kept intentionally small; component styles live with the UI. */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
