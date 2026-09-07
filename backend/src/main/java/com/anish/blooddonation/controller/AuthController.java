@@ -27,6 +27,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials) {
+        // Read the login details provided by the client.
         String email = credentials.get("email");
         String password = credentials.get("password"); // Capture the password
         String role = credentials.get("role");
@@ -45,6 +46,7 @@ public class AuthController {
         } else if ("hospital".equalsIgnoreCase(role)) {
             Optional<Requester> hospital = requesterRepository.findByContactEmail(email);
             if (hospital.isPresent() && hospital.get().getPassword().equals(password)) {
+                // Hospital access is limited to accounts that have been verified.
                 if ("hospital_verified".equals(hospital.get().getAccountType())) {
                     response.put("id", hospital.get().getRequesterId());
                     response.put("role", "hospital");
