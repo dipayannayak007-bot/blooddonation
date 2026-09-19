@@ -36,7 +36,7 @@ export default function AdminDashboard({ activeTab }) {
   if (activeTab === "donors") {
     return (
       <div className="w-full space-y-6">
-        <header className="flex justify-between items-end mb-8">
+        <header className="flex flex-col md:flex-row md:justify-between md:items-end mb-8 space-y-4 md:space-y-0">
           <div>
             <h1 className="text-4xl font-extrabold text-zinc-900 tracking-tight">
               Donors List
@@ -45,7 +45,7 @@ export default function AdminDashboard({ activeTab }) {
               Manage all registered donors.
             </p>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-wrap items-center gap-3 md:space-x-4">
             <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-zinc-100 font-bold text-zinc-600 text-sm">
               {today}
             </div>
@@ -67,7 +67,7 @@ export default function AdminDashboard({ activeTab }) {
                     {donor.contactEmail}
                   </p>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex flex-wrap items-center gap-3 md:space-x-4">
                   <span className="text-rose-600 font-extrabold bg-rose-50 px-3 py-1 rounded-lg">
                     {donor.bloodType || "N/A"}
                   </span>
@@ -93,7 +93,7 @@ export default function AdminDashboard({ activeTab }) {
   if (activeTab === "hospitals") {
     return (
       <div className="w-full space-y-6">
-        <header className="flex justify-between items-end mb-8">
+        <header className="flex flex-col md:flex-row md:justify-between md:items-end mb-8 space-y-4 md:space-y-0">
           <div>
             <h1 className="text-4xl font-extrabold text-zinc-900 tracking-tight">
               Hospitals List
@@ -102,7 +102,7 @@ export default function AdminDashboard({ activeTab }) {
               Manage all registered hospitals.
             </p>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-wrap items-center gap-3 md:space-x-4">
             <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-zinc-100 font-bold text-zinc-600 text-sm">
               {today}
             </div>
@@ -124,7 +124,7 @@ export default function AdminDashboard({ activeTab }) {
                     {hospital.contactEmail || "No Email"}
                   </p>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex flex-wrap items-center gap-3 md:space-x-4">
                   <span
                     className={`text-xs font-bold px-3 py-1 rounded-lg ${hospital.verificationStatus === "verified" ? "bg-lime-100 text-lime-700" : "bg-orange-100 text-orange-600"}`}
                   >
@@ -146,7 +146,7 @@ export default function AdminDashboard({ activeTab }) {
 
   return (
     <div className="w-full space-y-6">
-      <header className="flex justify-between items-end mb-8">
+      <header className="flex flex-col md:flex-row md:justify-between md:items-end mb-8 space-y-4 md:space-y-0">
         <div>
           <h1 className="text-4xl font-extrabold text-zinc-900 tracking-tight">
             Admin Console
@@ -155,7 +155,7 @@ export default function AdminDashboard({ activeTab }) {
             Platform analytics and ecosystem health.
           </p>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-wrap items-center gap-3 md:space-x-4">
           <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-zinc-100 font-bold text-zinc-600 text-sm">
             {today}
           </div>
@@ -171,7 +171,7 @@ export default function AdminDashboard({ activeTab }) {
       {stats ? (
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 lg:col-span-8">
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
               <div className="bg-[#151515] text-white p-8 rounded-[32px] shadow-xl relative overflow-hidden group">
                 <h3 className="text-zinc-400 font-bold text-sm mb-4">
                   Total Donors
@@ -192,7 +192,7 @@ export default function AdminDashboard({ activeTab }) {
                 <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-rose-500/20 rounded-full blur-3xl group-hover:bg-rose-500/30 transition-all"></div>
               </div>
 
-              <div className="bg-white p-8 rounded-[32px] shadow-sm border border-zinc-100 col-span-2 flex justify-between items-center group relative overflow-hidden">
+              <div className="bg-white p-8 rounded-[32px] shadow-sm border border-zinc-100 col-span-1 sm:col-span-2 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-6 sm:space-y-0 group relative overflow-hidden">
                 <div className="relative z-10">
                   <h3 className="text-zinc-500 font-bold text-sm mb-2">
                     Platform Success Rate

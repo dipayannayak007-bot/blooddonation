@@ -123,7 +123,7 @@ export default function HospitalDashboard({
 
   return (
     <div className="w-full space-y-6">
-      <header className="flex justify-between items-end mb-8">
+      <header className="flex flex-col md:flex-row md:justify-between md:items-end mb-8 space-y-4 md:space-y-0">
         <div>
           <h1 className="text-4xl font-extrabold text-zinc-900 tracking-tight">
             Hospital Overview
@@ -132,7 +132,7 @@ export default function HospitalDashboard({
             Manage emergencies and monitor analytics.
           </p>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-wrap items-center gap-3 md:space-x-4">
           <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-zinc-100 font-bold text-zinc-600 text-sm">
             {today}
           </div>

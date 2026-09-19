@@ -1,4 +1,4 @@
-import { API_BASE_URL } from './config';
+import { API_BASE_URL } from "./config";
 import { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
@@ -48,13 +48,10 @@ export default function DonorDashboard({ donorId, donorName, activeTab }) {
 
   const handleAccept = async (requestId) => {
     try {
-      await axios.post(
-        `${API_BASE_URL}/api/requests/${requestId}/responses`,
-        {
-          donorId: donorId,
-          answer: "accept",
-        },
-      );
+      await axios.post(`${API_BASE_URL}/api/requests/${requestId}/responses`, {
+        donorId: donorId,
+        answer: "accept",
+      });
       setAlerts(alerts.filter((alert) => alert.requestId !== requestId));
       alert("Thank you! The hospital has been notified of your response.");
     } catch (error) {
@@ -78,15 +75,15 @@ export default function DonorDashboard({ donorId, donorName, activeTab }) {
   });
 
   const renderHeader = (title, subtitle) => (
-    <header className="flex justify-between items-end mb-8">
+    <header className="flex flex-col md:flex-row md:justify-between md:items-end mb-8 space-y-4 md:space-y-0">
       <div>
-        <h1 className="text-4xl font-extrabold text-zinc-900 tracking-tight">
+        <h1 className="text-4xl font-extrabold text-zinc-900 tracking-tighter mb-2">
           {title}
         </h1>
-        <p className="text-zinc-500 font-medium mt-1">{subtitle}</p>
+        <p className="text-zinc-500 font-medium">{subtitle}</p>
       </div>
-      <div className="flex items-center space-x-4">
-        <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-zinc-100 font-bold text-zinc-600 text-sm">
+      <div className="flex flex-wrap items-center gap-3 md:space-x-4">
+        <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-zinc-100 text-sm font-bold text-zinc-600">
           {today}
         </div>
         <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-2xl shadow-sm border border-zinc-100">
@@ -123,23 +120,23 @@ export default function DonorDashboard({ donorId, donorName, activeTab }) {
               {history.map((record) => (
                 <div
                   key={record.recordId}
-                  className="flex items-center justify-between p-6 rounded-3xl hover:bg-zinc-50 transition border border-zinc-100"
+                  className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 rounded-3xl hover:bg-zinc-50 transition border border-zinc-100 space-y-4 md:space-y-0"
                 >
-                  <div className="flex items-center space-x-6">
-                    <div className="w-14 h-14 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center font-extrabold text-xl">
+                  <div className="flex items-center space-x-4 md:space-x-6">
+                    <div className="w-14 h-14 shrink-0 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center font-extrabold text-xl">
                       {record.request.bloodTypeNeeded}
                     </div>
                     <div>
-                      <h4 className="font-extrabold text-zinc-900 text-lg">
+                      <h4 className="font-extrabold text-zinc-900 text-lg leading-tight">
                         Hospital Request #{record.request.requestId}
                       </h4>
-                      <p className="text-zinc-500 font-medium">
+                      <p className="text-zinc-500 font-medium text-sm mt-1">
                         Successfully completed donation
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <span className="text-sm font-bold bg-zinc-100 text-zinc-600 px-4 py-2 rounded-xl">
+                  <div className="text-left md:text-right w-full md:w-auto mt-2 md:mt-0">
+                    <span className="text-sm font-bold bg-zinc-100 text-zinc-600 px-4 py-2 rounded-xl inline-block">
                       {new Date(record.donationDate).toLocaleDateString(
                         undefined,
                         {
@@ -164,7 +161,7 @@ export default function DonorDashboard({ donorId, donorName, activeTab }) {
     return (
       <div className="w-full space-y-6">
         {renderHeader("Your Rewards", "Unlock perks for saving lives.")}
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <div
             className={`p-8 rounded-[32px] border-2 shadow-sm relative overflow-hidden transition-all ${donorDetails?.rewardTier === "Bronze" || donorDetails?.rewardTier === "Silver" || donorDetails?.rewardTier === "Gold" ? "border-[#cd7f32] bg-orange-50" : "border-zinc-100 bg-white opacity-50"}`}
           >
@@ -213,7 +210,7 @@ export default function DonorDashboard({ donorId, donorName, activeTab }) {
       <div className="grid grid-cols-12 gap-6">
         {/* Main Stats Block */}
         <div className="col-span-12 lg:col-span-8 space-y-6">
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
             <div className="bg-white rounded-[32px] p-8 shadow-sm border border-zinc-100 relative overflow-hidden group">
               <h3 className="text-zinc-500 font-bold mb-4 flex justify-between items-center">
                 <span>Total Donations</span>
@@ -265,29 +262,29 @@ export default function DonorDashboard({ donorId, donorName, activeTab }) {
               <div className="space-y-4">
                 {alerts.map((alert, index) => (
                   <div
-                    key={index}
-                    className="bg-rose-50 border border-rose-100 p-6 rounded-3xl flex items-center justify-between"
+                    key={alert.requestId}
+                    className="bg-rose-50 border border-rose-100 p-4 md:p-6 rounded-3xl flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0"
                   >
                     <div>
                       <div className="flex items-center space-x-3 mb-2">
-                        <span className="bg-rose-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider animate-pulse">
+                        <span className="bg-rose-500 text-white text-[10px] md:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider animate-pulse">
                           {alert.urgency}
                         </span>
-                        <h4 className="text-rose-900 font-extrabold text-lg">
+                        <h4 className="text-rose-900 font-extrabold text-base md:text-lg">
                           {alert.message}
                         </h4>
                       </div>
-                      <p className="text-rose-700 font-medium text-sm">
+                      <p className="text-rose-700 font-medium text-xs md:text-sm">
                         Requested Type:{" "}
                         <span className="font-extrabold text-rose-900">
                           {alert.bloodType}
                         </span>
                       </p>
                     </div>
-                    <div className="flex space-x-3">
+                    <div className="flex w-full md:w-auto space-x-2 md:space-x-3">
                       <button
                         onClick={() => handleAccept(alert.requestId)}
-                        className="px-6 py-3 bg-rose-500 text-white rounded-2xl font-bold hover:bg-rose-600 transition shadow-lg shadow-rose-500/30"
+                        className="flex-1 md:flex-none px-4 md:px-6 py-2 md:py-3 bg-rose-500 text-white rounded-xl md:rounded-2xl font-bold text-xs md:text-base hover:bg-rose-600 transition shadow-lg shadow-rose-500/30"
                       >
                         I Can Donate
                       </button>
@@ -299,7 +296,7 @@ export default function DonorDashboard({ donorId, donorName, activeTab }) {
                             ),
                           )
                         }
-                        className="px-6 py-3 bg-white text-rose-500 rounded-2xl font-bold hover:bg-rose-50 transition border border-rose-200"
+                        className="flex-1 md:flex-none px-4 md:px-6 py-2 md:py-3 bg-white text-rose-500 rounded-xl md:rounded-2xl font-bold text-xs md:text-base hover:bg-rose-50 transition border border-rose-200"
                       >
                         Decline
                       </button>

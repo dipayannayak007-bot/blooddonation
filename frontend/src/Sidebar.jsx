@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Home, Activity, FileText, Users, LogOut, X } from "lucide-react";
+import { Home, Activity, FileText, Users, LogOut, X, Building } from "lucide-react";
 
 export default function Sidebar({ role, onLogout, activeTab, setActiveTab }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -113,7 +113,8 @@ export default function Sidebar({ role, onLogout, activeTab, setActiveTab }) {
         </div>
       )}
 
-      <div className="w-64 bg-[#151515] text-white flex flex-col justify-between p-6 rounded-[32px] my-4 ml-4 h-[calc(100vh-2rem)] shadow-2xl relative z-50">
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex w-64 bg-[#151515] text-white flex-col justify-between p-6 rounded-[32px] my-4 ml-4 h-[calc(100vh-2rem)] shadow-2xl relative z-50">
         <div>
           <div className="flex items-center space-x-3 mb-12 pl-2 mt-2">
             <div className="w-10 h-10 bg-rose-500 rounded-2xl flex items-center justify-center font-bold text-xl shadow-lg shadow-rose-500/30">
@@ -173,6 +174,32 @@ export default function Sidebar({ role, onLogout, activeTab, setActiveTab }) {
             <span className="text-sm font-medium">Log Out</span>
           </button>
         </div>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#151515] text-white p-3 flex justify-around items-center z-[90] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] pb-safe rounded-t-3xl border-t border-zinc-800">
+        {items.map((item) => {
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`flex flex-col items-center justify-center space-y-1 p-2 rounded-xl transition-all ${
+                isActive ? "text-rose-500" : "text-zinc-500 hover:text-white"
+              }`}
+            >
+              <item.icon className="w-6 h-6" />
+              <span className="text-[10px] font-medium">{item.name}</span>
+            </button>
+          );
+        })}
+        <button
+          onClick={onLogout}
+          className="flex flex-col items-center justify-center space-y-1 p-2 rounded-xl transition-all text-zinc-500 hover:text-white"
+        >
+          <LogOut className="w-6 h-6" />
+          <span className="text-[10px] font-medium">Log Out</span>
+        </button>
       </div>
     </>
   );
