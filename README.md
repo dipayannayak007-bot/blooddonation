@@ -1,86 +1,81 @@
-# Blood Donation Platform 🩸
+﻿# PulseNode - Blood Donation Platform 🩸
 
-A web-based blood donation platform designed to help connect blood donors with people who need blood. The project aims to make it easier to find suitable donors and improve access to blood during emergencies.
+PulseNode is a real-time, algorithmic dispatch system connecting hospitals with eligible blood donors instantly. It operates as a modern network for saving lives, optimizing dispatch times to under 1 minute.
 
-## ✨ Features
+## 🚀 Features
 
-- 🩸 Blood donor registration
-- 🔎 Search for donors by blood group
-- 📍 Find suitable donors based on location
-- 📋 Manage donor information
-- 🚨 Support for urgent blood requirements
-- 💻 Responsive and user-friendly frontend
+- **Automated Dispatch Engine:** Algorithmic matching based on real-time location and blood type compatibility.
+- **Google OAuth Integration:** Secure, seamless authentication for hospitals, donors, and administrators.
+- **Real-Time WebSockets:** Live SOS broadcast system connecting nearby donors instantly.
+- **Interactive Mapping:** Geographic radar showing real-time SOS requests, active donors, and fulfilled donations.
+- **Admin Command Center:** Complete oversight of the platform, managing verified hospitals and active donors.
+- **Analytics & History:** Comprehensive tracking of donation history and hospital blood utilization.
 
-## 🔄 How It Works
+## 🛠 Tech Stack
 
-1. **Register** as a blood donor.
-2. **Search** for donors based on blood group and location.
-3. **Connect** with a suitable donor when blood is needed.
-4. **Donate** blood and help save a life. ❤️
+### Backend (Java / Spring Boot)
+- **Framework:** Spring Boot 3.3.x
+- **Database:** PostgreSQL (with Spring Data JPA / Hibernate)
+- **Authentication:** Google Identity Services (OAuth 2.0)
+- **Real-time:** Spring WebSockets (STOMP over SockJS)
+- **Build Tool:** Maven
 
-## 🛠️ Tech Stack
+### Frontend (React / Vite)
+- **Framework:** React 18, Vite
+- **Styling:** Tailwind CSS (Dark/Light glassmorphism themes)
+- **Maps:** Leaflet & React-Leaflet
+- **HTTP Client:** Axios
 
-- **Frontend:** HTML, CSS, JavaScript / React (as implemented in the project)
-- **Backend:** To be added / integrated
-- **Database:** To be added / integrated
+## 📂 Project Structure
 
-## 📁 Project Structure
-
-```text
+`	ext
 blooddonation/
-└── frontend/
-    └── Frontend application files
-```
+├── backend/                  # Spring Boot REST API & WebSocket Server
+│   ├── src/main/java/...     # Core Business Logic (Controllers, Services, Models, Repositories)
+│   └── src/main/resources/   # Application Configuration (application.properties)
+└── frontend/                 # React SPA
+    ├── src/                  # React Components, State Management, and Views
+    └── public/               # Static assets
+`
+
+## ⚙️ Backend Architecture (Focus)
+
+The backend is strictly typed and built around a robust relational model. Key design decisions include:
+- **Repository Pattern:** Decoupling database operations using JpaRepository for Entities like Donor, BloodRequest, and DonationRecord.
+- **Entity Integrity:** Advanced JPA annotations managing strict constraints, cascading updates, and relationship mapping (One-to-Many, Many-to-One).
+- **Graceful Error Handling:** Global exception interception returning standardized JSON error payloads.
+- **Location-Aware Queries:** Integration of Haversine formulas/spatial queries to restrict SOS dispatches to a 10km radius.
+- **Security:** Headless API design ensuring standard REST statelessness while seamlessly validating OAuth 2.0 tokens from Google.
 
 ## 🚀 Getting Started
 
 ### 1. Clone the repository
 
-```bash
+`ash
 git clone https://github.com/dipayannayak007-bot/blooddonation.git
 cd blooddonation
-```
+`
 
-### 2. Open the frontend
+### 2. Backend Setup
 
-```bash
+`ash
+cd backend
+# Ensure PostgreSQL is running on localhost:5432 or update application.properties
+./mvnw spring-boot:run
+`
+*The API will be available at http://localhost:8080*
+
+### 3. Frontend Setup
+
+`ash
 cd frontend
-```
-
-Install the required dependencies if the project uses a package manager:
-
-```bash
 npm install
-```
-
-### 3. Run the project
-
-```bash
 npm run dev
-```
-
-> The exact commands may vary depending on the frontend setup.
-
-## 🎯 Future Improvements
-
-- User authentication and secure donor profiles
-- Real-time donor availability
-- Hospital and blood-bank integration
-- Emergency notifications
-- GPS-based donor matching
-- Blood inventory tracking
-- Mobile application
+`
+*The UI will be available at http://localhost:5173*
 
 ## 🤝 Contributing
-
 Contributions are welcome. Fork the repository, create a new branch, make your changes, and submit a pull request.
 
-## 📄 License
-
-This project is currently for educational/project purposes.
-
-## 👨‍💻 Author
-
-**Dipayan Nayak**
-
-GitHub: [dipayannayak007-bot](https://github.com/dipayannayak007-bot)
+## 📝 License
+This project is currently for educational and academic project purposes.
