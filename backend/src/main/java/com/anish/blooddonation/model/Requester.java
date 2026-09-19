@@ -20,8 +20,7 @@ public class Requester {
     @Column(unique = true)
     private String contactEmail; //[cite: 3]
 
-    @Column(nullable = false)
-    private String password = "password123";
+    private String password;
 
     @Column(nullable = false)
     private String accountType; // individual, hospital_verified[cite: 3]

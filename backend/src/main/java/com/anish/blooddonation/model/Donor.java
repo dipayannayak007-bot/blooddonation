@@ -23,8 +23,7 @@ public class Donor {
     @Column(unique = true)
     private String contactEmail; //[cite: 3]
 
-    @Column(nullable = false)
-    private String password = "password123";
+    private String password;
 
     // Storing coordinates for the 10km radius calculation[cite: 3]
     private Double latitude;
@@ -34,4 +33,8 @@ public class Donor {
     private String verificationStatus = "pending"; // pending, verified, rejected[cite: 3]
 
     private LocalDateTime lastDonationDate; //[cite: 3]
+
+    private Integer donationCount = 0;
+
+    private String rewardTier = "None"; // None, Bronze, Silver, Gold
 }
