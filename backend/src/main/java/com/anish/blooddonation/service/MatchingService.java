@@ -31,9 +31,8 @@ public class MatchingService {
 
     @Transactional
     public void processNewRequest(BloodRequest request) {
-        // Find compatible donors within the configured search radius.
         List<Donor> matchedDonors = donorRepository.findEligibleDonorsNearby(
-                request.getBloodTypeNeeded(), request.getLatitude(), request.getLongitude(), 10.0
+                request.getBloodTypeNeeded(), request.getLatitude(), request.getLongitude(), 50000.0
         );
 
         for (Donor donor : matchedDonors) {
@@ -51,7 +50,7 @@ public class MatchingService {
             notification.setMessage("Urgent match nearby! Type: " + request.getBloodTypeNeeded());
             notificationRepository.save(notification);
 
-            // Notify the matched donor through the live WebSocket channel.
+            // Fire the real-time push notification
             messagingTemplate.convertAndSend(
                     "/topic/alerts/" + donor.getDonorId(),
                     buildSosPayload(request)
