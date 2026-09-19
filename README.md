@@ -1,81 +1,111 @@
-﻿# PulseNode - Blood Donation Platform 🩸
+﻿<div align="center">
+  <h1>PulseNode 🩸</h1>
+  <p><em>The modern network for saving lives.</em></p>
+  
+  [![Frontend Status](https://img.shields.io/badge/Frontend-Vercel-black?style=for-the-badge&logo=vercel)](https://pulse-node-frontend.vercel.app)
+  [![Backend Status](https://img.shields.io/badge/Backend-Render-purple?style=for-the-badge&logo=render)](https://pulsenode-backend.onrender.com)
+  [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3-brightgreen?style=for-the-badge&logo=spring)](https://spring.io/projects/spring-boot)
+  [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+</div>
 
-PulseNode is a real-time, algorithmic dispatch system connecting hospitals with eligible blood donors instantly. It operates as a modern network for saving lives, optimizing dispatch times to under 1 minute.
+<hr />
 
-## 🚀 Features
+## 🌐 Live Deployments
 
-- **Automated Dispatch Engine:** Algorithmic matching based on real-time location and blood type compatibility.
-- **Google OAuth Integration:** Secure, seamless authentication for hospitals, donors, and administrators.
-- **Real-Time WebSockets:** Live SOS broadcast system connecting nearby donors instantly.
-- **Interactive Mapping:** Geographic radar showing real-time SOS requests, active donors, and fulfilled donations.
-- **Admin Command Center:** Complete oversight of the platform, managing verified hospitals and active donors.
-- **Analytics & History:** Comprehensive tracking of donation history and hospital blood utilization.
+- **Live Application (Frontend):** [pulse-node-frontend.vercel.app](https://pulse-node-frontend.vercel.app)
+- **Live API Base (Backend):** [pulsenode-backend.onrender.com](https://pulsenode-backend.onrender.com)
 
-## 🛠 Tech Stack
+---
 
-### Backend (Java / Spring Boot)
-- **Framework:** Spring Boot 3.3.x
-- **Database:** PostgreSQL (with Spring Data JPA / Hibernate)
-- **Authentication:** Google Identity Services (OAuth 2.0)
-- **Real-time:** Spring WebSockets (STOMP over SockJS)
-- **Build Tool:** Maven
+## 📖 Overview
 
-### Frontend (React / Vite)
-- **Framework:** React 18, Vite
-- **Styling:** Tailwind CSS (Dark/Light glassmorphism themes)
-- **Maps:** Leaflet & React-Leaflet
-- **HTTP Client:** Axios
+PulseNode is a real-time, algorithmic blood dispatch system connecting hospitals with eligible blood donors instantly. It acts as an emergency radar, minimizing the critical time between a hospital's SOS request and a donor's arrival, optimizing dispatch times to under **1 minute**.
 
-## 📂 Project Structure
+---
 
-`	ext
-blooddonation/
-├── backend/                  # Spring Boot REST API & WebSocket Server
-│   ├── src/main/java/...     # Core Business Logic (Controllers, Services, Models, Repositories)
-│   └── src/main/resources/   # Application Configuration (application.properties)
-└── frontend/                 # React SPA
-    ├── src/                  # React Components, State Management, and Views
-    └── public/               # Static assets
+## ⚙️ Backend Architecture (Core Focus)
+
+This repository heavily emphasizes a strictly typed, highly scalable backend built on **Java** and **Spring Boot**. 
+
+### System Design Highlights
+- **Layered Architecture:** Strict separation of concerns using Controllers, Services, and JPA Repositories.
+- **Relational Integrity:** Complex entity mappings using Hibernate (One-to-Many, Many-to-One constraints) to ensure atomic transactions between Hospitals, Donors, and Blood Requests.
+- **Geospatial & Algorithmic Dispatch:** The matching engine utilizes Haversine-based distance calculations to broadcast SOS alerts exclusively to eligible donors within a 10km radius.
+- **OAuth 2.0 Security:** Headless architecture that securely authenticates sessions using Google Identity Services, auto-generating UUID constraints to satisfy Postgres integrity.
+- **Real-Time WebSockets:** Integration of STOMP over SockJS to push live SOS notifications and status updates directly to connected donor dashboards.
+- **Global Exception Handling:** Custom @ControllerAdvice interceptors that guarantee standard JSON error envelopes instead of raw stack traces.
+
+### 🗄️ Database Schema Model
+
+`mermaid
+erDiagram
+    DONOR {
+        Long donorId PK
+        String contactEmail UK
+        String name
+        String bloodType
+        Double latitude
+        Double longitude
+        String verificationStatus
+    }
+    REQUESTER {
+        Long requesterId PK
+        String contactEmail UK
+        String name
+        String accountType
+    }
+    BLOOD_REQUEST {
+        Long requestId PK
+        String bloodType
+        String urgency
+        String status
+        Long requesterId FK
+    }
+    DONATION_RECORD {
+        Long recordId PK
+        Long donorId FK
+        Long requestId FK
+        String status
+    }
+    REQUESTER ||--o{ BLOOD_REQUEST : makes
+    DONOR ||--o{ DONATION_RECORD : fulfills
+    BLOOD_REQUEST ||--o{ DONATION_RECORD : tracked_by
 `
 
-## ⚙️ Backend Architecture (Focus)
+---
 
-The backend is strictly typed and built around a robust relational model. Key design decisions include:
-- **Repository Pattern:** Decoupling database operations using JpaRepository for Entities like Donor, BloodRequest, and DonationRecord.
-- **Entity Integrity:** Advanced JPA annotations managing strict constraints, cascading updates, and relationship mapping (One-to-Many, Many-to-One).
-- **Graceful Error Handling:** Global exception interception returning standardized JSON error payloads.
-- **Location-Aware Queries:** Integration of Haversine formulas/spatial queries to restrict SOS dispatches to a 10km radius.
-- **Security:** Headless API design ensuring standard REST statelessness while seamlessly validating OAuth 2.0 tokens from Google.
+## 🚀 Key Features
 
-## 🚀 Getting Started
+| Feature | Description |
+|---------|-------------|
+| 🔐 **Google OAuth** | Secure, one-click login for donors and hospitals. |
+| 📍 **Interactive Maps** | Live Leaflet maps showing real-time SOS requests. |
+| ⚡ **Live WebSockets** | Instant matching alerts pushed directly to the UI. |
+| 🏥 **Hospital Dashboards** | Command center for tracking dispatches and history. |
+| 🛡️ **Admin Portal** | Unified view of all registered entities and analytics. |
 
-### 1. Clone the repository
+---
 
-`ash
-git clone https://github.com/dipayannayak007-bot/blooddonation.git
-cd blooddonation
-`
+## 💻 Local Development Setup
 
-### 2. Backend Setup
+### 1. Backend (Spring Boot)
+Ensure PostgreSQL is running locally on port 5432 with a database named lood_donation.
 
 `ash
 cd backend
-# Ensure PostgreSQL is running on localhost:5432 or update application.properties
 ./mvnw spring-boot:run
 `
-*The API will be available at http://localhost:8080*
+*The API will start on http://localhost:8080*
 
-### 3. Frontend Setup
-
+### 2. Frontend (React / Vite)
 `ash
 cd frontend
 npm install
 npm run dev
 `
-*The UI will be available at http://localhost:5173*
+*The Application will start on http://localhost:5173*
 
-## 🤝 Contributing
-Contributions are welcome. Fork the repository, create a new branch, make your changes, and submit a pull request.
-
-## 📝 License
-This project is currently for educational and academic project purposes.
+---
+<div align="center">
+  <i>Developed for academic evaluation.</i>
+</div>
