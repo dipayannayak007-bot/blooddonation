@@ -8,10 +8,22 @@ html {
 body {
   margin: 0;
   min-width: 320px;
+  background: #f8fafc;
+  color: #0f172a;
 }
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: #fecaca;
+  color: #7f1d1d;
 }
