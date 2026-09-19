@@ -12,7 +12,6 @@ export default function App() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [isRegisteringHospital, setIsRegisteringHospital] = useState(false);
 
-  // Keep login fields controlled so validation and reset behavior stay predictable.
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("donor");
@@ -27,11 +26,7 @@ export default function App() {
     try {
       const response = await axios.post(
         "https://pulsenode-backend.onrender.com/api/auth/login",
-        {
-          email: email,
-          password: password,
-          role: role,
-        },
+        { email, password, role },
       );
 
       setUserId(response.data.id);
@@ -56,6 +51,7 @@ export default function App() {
       />
     );
   }
+
   if (isRegisteringHospital) {
     return (
       <HospitalRegistration
@@ -85,18 +81,13 @@ export default function App() {
 
           <form onSubmit={handleLogin} className="space-y-5">
             {error && (
-              <div
-                role="alert"
-                className="bg-red-50 text-red-600 p-3 rounded text-sm border border-red-200"
-              >
+              <div role="alert" className="bg-red-50 text-red-600 p-3 rounded text-sm border border-red-200">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Email Address
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
               <input
                 type="email"
                 required
@@ -109,9 +100,7 @@ export default function App() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Password
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
               <input
                 type="password"
                 required
@@ -124,9 +113,7 @@ export default function App() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Account Role
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Account Role</label>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
@@ -141,9 +128,7 @@ export default function App() {
               type="submit"
               disabled={loading}
               aria-busy={loading}
-              className={`w-full py-3 mt-4 text-white rounded-lg font-bold transition shadow-md ${
-                loading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
-              }`}
+              className="pulse-primary-button w-full py-3 mt-4 text-white rounded-lg font-bold transition-all shadow-md disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "Authenticating..." : "Secure Login"}
             </button>
@@ -152,19 +137,13 @@ export default function App() {
           <div className="mt-6 text-center text-sm text-gray-500 flex flex-col space-y-2">
             <div>
               New donor?{" "}
-              <button
-                onClick={() => setIsRegistering(true)}
-                className="text-red-600 font-bold hover:underline"
-              >
+              <button onClick={() => setIsRegistering(true)} className="pulse-link-button pulse-link-red">
                 Register here
               </button>
             </div>
             <div>
               New hospital?{" "}
-              <button
-                onClick={() => setIsRegisteringHospital(true)}
-                className="text-blue-600 font-bold hover:underline"
-              >
+              <button onClick={() => setIsRegisteringHospital(true)} className="pulse-link-button pulse-link-blue">
                 Register here
               </button>
             </div>
@@ -179,9 +158,7 @@ export default function App() {
       <div className="max-w-5xl mx-auto">
         <div className="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
           <h1 className="text-xl font-bold text-gray-800">
-            {currentView === "donor"
-              ? "Donor Radar Active"
-              : "Hospital Command Center"}
+            {currentView === "donor" ? "Donor Radar Active" : "Hospital Command Center"}
           </h1>
           <button
             onClick={() => {
@@ -190,21 +167,15 @@ export default function App() {
               setEmail("");
               setPassword("");
             }}
-            className="text-sm font-semibold text-gray-500 hover:text-red-600 transition"
+            className="pulse-logout-button"
           >
             Log Out
           </button>
         </div>
 
-        {currentView === "donor" && (
-          <DonorDashboard donorId={userId} donorName={userName} />
-        )}
+        {currentView === "donor" && <DonorDashboard donorId={userId} donorName={userName} />}
         {currentView === "requester" && (
-          <SubmitRequest
-            requesterId={userId}
-            hospitalName={userName}
-            onBack={() => setCurrentView("login")}
-          />
+          <SubmitRequest requesterId={userId} hospitalName={userName} onBack={() => setCurrentView("login")} />
         )}
       </div>
     </div>
