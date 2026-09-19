@@ -11,7 +11,6 @@ export default function App() {
   const [userName, setUserName] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [isRegisteringHospital, setIsRegisteringHospital] = useState(false);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("donor");
@@ -67,99 +66,114 @@ export default function App() {
 
   if (currentView === "login") {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
-              🩸
+      <main className="modern-auth">
+        <div className="auth-glow auth-glow-one" />
+        <div className="auth-glow auth-glow-two" />
+
+        <section className="auth-layout">
+          <div className="auth-brand-panel">
+            <div className="brand-mark">♥</div>
+            <p className="eyebrow">SMART BLOOD NETWORK</p>
+            <h1>PulseNode</h1>
+            <p className="brand-copy">
+              Connecting donors, hospitals and urgent blood requests in one
+              simple platform.
+            </p>
+            <div className="trust-row">
+              <span>●</span> Secure access
+              <span>●</span> Fast coordination
             </div>
-            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-              PulseNode
-            </h1>
-            <p className="text-gray-500 mt-2">Secure Portal</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            {error && (
-              <div role="alert" className="bg-red-50 text-red-600 p-3 rounded text-sm border border-red-200">
-                {error}
-              </div>
-            )}
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
-              <input
-                type="email"
-                required
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your registered email"
-                className="w-full rounded-md border-gray-300 shadow-sm p-2.5 border focus:ring-2 focus:ring-red-500 focus:outline-none"
-              />
+          <div className="auth-card">
+            <div className="auth-card-header">
+              <p className="auth-kicker">WELCOME BACK</p>
+              <h2>Sign in to your account</h2>
+              <p>Manage donations and blood requests from your dashboard.</p>
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                required
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full rounded-md border-gray-300 shadow-sm p-2.5 border focus:ring-2 focus:ring-red-500 focus:outline-none"
-              />
-            </div>
+            <form onSubmit={handleLogin} className="modern-form">
+              {error && (
+                <div role="alert" className="modern-error">
+                  <span>!</span>
+                  {error}
+                </div>
+              )}
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Account Role</label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full rounded-md border-gray-300 shadow-sm p-2.5 border focus:ring-2 focus:ring-red-500 focus:outline-none"
+              <label>
+                <span>Email address</span>
+                <input
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                />
+              </label>
+
+              <label>
+                <span>Password</span>
+                <input
+                  type="password"
+                  required
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                />
+              </label>
+
+              <label>
+                <span>Account type</span>
+                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                  <option value="donor">Donor · Receive alerts</option>
+                  <option value="hospital">Hospital · Request blood</option>
+                </select>
+              </label>
+
+              <button
+                type="submit"
+                disabled={loading}
+                aria-busy={loading}
+                className="modern-primary-button"
               >
-                <option value="donor">Donor (Receive Alerts)</option>
-                <option value="hospital">Hospital (Request Blood)</option>
-              </select>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              aria-busy={loading}
-              className="pulse-primary-button w-full py-3 mt-4 text-white rounded-lg font-bold transition-all shadow-md disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading ? "Authenticating..." : "Secure Login"}
-            </button>
-          </form>
-
-          <div className="mt-6 text-center text-sm text-gray-500 flex flex-col space-y-2">
-            <div>
-              New donor?{" "}
-              <button onClick={() => setIsRegistering(true)} className="pulse-link-button pulse-link-red">
-                Register here
+                <span>{loading ? "Signing you in..." : "Continue securely"}</span>
+                {!loading && <span className="button-arrow">→</span>}
               </button>
-            </div>
-            <div>
-              New hospital?{" "}
-              <button onClick={() => setIsRegisteringHospital(true)} className="pulse-link-button pulse-link-blue">
-                Register here
-              </button>
+            </form>
+
+            <div className="auth-register">
+              <p>New to PulseNode?</p>
+              <div>
+                <button onClick={() => setIsRegistering(true)}>
+                  Register as donor
+                </button>
+                <button onClick={() => setIsRegisteringHospital(true)}>
+                  Register hospital
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-800">
-            {currentView === "donor" ? "Donor Radar Active" : "Hospital Command Center"}
-          </h1>
+    <div className="modern-app-shell">
+      <header className="modern-topbar">
+        <div className="modern-logo">
+          <span>♥</span>
+          <div>
+            <strong>PulseNode</strong>
+            <small>Blood Network</small>
+          </div>
+        </div>
+
+        <div className="modern-session">
+          <span className="status-dot" />
+          <span>{currentView === "donor" ? "Donor dashboard" : "Hospital dashboard"}</span>
           <button
             onClick={() => {
               setCurrentView("login");
@@ -169,15 +183,23 @@ export default function App() {
             }}
             className="pulse-logout-button"
           >
-            Log Out
+            Log out
           </button>
         </div>
+      </header>
 
-        {currentView === "donor" && <DonorDashboard donorId={userId} donorName={userName} />}
-        {currentView === "requester" && (
-          <SubmitRequest requesterId={userId} hospitalName={userName} onBack={() => setCurrentView("login")} />
+      <main className="modern-content">
+        {currentView === "donor" && (
+          <DonorDashboard donorId={userId} donorName={userName} />
         )}
-      </div>
+        {currentView === "requester" && (
+          <SubmitRequest
+            requesterId={userId}
+            hospitalName={userName}
+            onBack={() => setCurrentView("login")}
+          />
+        )}
+      </main>
     </div>
   );
 }
