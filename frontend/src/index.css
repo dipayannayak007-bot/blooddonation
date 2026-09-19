@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Global page defaults kept intentionally small; component styles live with the UI. */
 html {
   scroll-behavior: smooth;
 }
@@ -26,4 +25,94 @@ button {
 ::selection {
   background: #fecaca;
   color: #7f1d1d;
+}
+
+.pulse-primary-button {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #dc2626;
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow: 0 8px 18px rgba(185, 28, 28, 0.22);
+  transform: translateY(0);
+}
+
+.pulse-primary-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-110%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.24), transparent);
+  transition: transform 0.55s ease;
+}
+
+.pulse-primary-button:hover {
+  background: linear-gradient(135deg, #f43f5e, #991b1b);
+  box-shadow: 0 12px 24px rgba(185, 28, 28, 0.3);
+  transform: translateY(-2px);
+}
+
+.pulse-primary-button:hover::after {
+  transform: translateX(110%);
+}
+
+.pulse-primary-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.pulse-link-button {
+  border: 0;
+  background: transparent;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.pulse-link-button:hover {
+  transform: translateY(-1px);
+}
+
+.pulse-link-red {
+  color: #dc2626;
+}
+
+.pulse-link-red:hover {
+  color: #991b1b;
+  text-decoration: underline;
+}
+
+.pulse-link-blue {
+  color: #2563eb;
+}
+
+.pulse-link-blue:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.pulse-logout-button {
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  background: #fff;
+  color: #6b7280;
+  padding: 0.55rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  transition: all 0.2s ease;
+}
+
+.pulse-logout-button:hover {
+  border-color: #ef4444;
+  background: #fef2f2;
+  color: #dc2626;
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.12);
+  transform: translateY(-1px);
+}
+
+.pulse-logout-button:active {
+  transform: scale(0.97);
+}
+
+button:focus-visible {
+  outline: 3px solid rgba(239, 68, 68, 0.35);
+  outline-offset: 3px;
 }
