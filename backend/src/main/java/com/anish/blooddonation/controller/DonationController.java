@@ -37,31 +37,41 @@ public class DonationController {
 
     // BD-01a: Register Donor[cite: 3]
     @PostMapping("/donors")
-    public ResponseEntity<Donor> registerDonor(@RequestBody Donor donor) {
-        // Fallback in case the frontend sends an empty password
-        if (donor.getPassword() == null || donor.getPassword().isEmpty()) {
-            donor.setPassword("password123");
-        }
+    public ResponseEntity<?> registerDonor(@RequestBody Donor donor) {
 
         try {
+            // Set a dummy password for Google OAuth users to satisfy DB constraints
+            if (donor.getPassword() == null || donor.getPassword().isEmpty()) {
+                donor.setPassword("google_oauth_user_" + java.util.UUID.randomUUID().toString().substring(0, 8));
+            }
+            
             // Saves the donor along with their newly mapped password
             Donor newDonor = donorRepository.save(donor);
             return ResponseEntity.ok(newDonor);
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error saving donor: " + e.getMessage());
             // Returns 409 Conflict if the email already exists in the database
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
-    // BD-01b: Get pending donors for admin verification[cite: 3]
+    // BD-01b: Get donors
     @GetMapping("/donors")
-    public ResponseEntity<List<Donor>> getPendingDonors(@RequestParam String verification_status) {
-        // Simple filter for the prototype
+    public ResponseEntity<List<Donor>> getDonors(@RequestParam(required = false) String verification_status) {
         List<Donor> allDonors = donorRepository.findAll();
-        List<Donor> pending = allDonors.stream()
-                .filter(d -> d.getVerificationStatus().equals(verification_status))
-                .toList();
-        return ResponseEntity.ok(pending);
+        if (verification_status != null && !verification_status.isEmpty()) {
+            List<Donor> pending = allDonors.stream()
+                    .filter(d -> d.getVerificationStatus().equals(verification_status))
+                    .toList();
+            return ResponseEntity.ok(pending);
+        }
+        return ResponseEntity.ok(allDonors);
+    }
+
+    @GetMapping("/requesters")
+    public ResponseEntity<List<Requester>> getRequesters() {
+        return ResponseEntity.ok(requesterRepository.findAll());
     }
 
     // BD-02: Submit Blood Request[cite: 3]
@@ -73,6 +83,18 @@ public class DonationController {
         matchingService.processNewRequest(savedRequest);
 
         return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/requests/{requestId}/cancel")
+    public ResponseEntity<BloodRequest> cancelRequest(@PathVariable Long requestId) {
+        Optional<BloodRequest> optionalRequest = requestRepository.findById(requestId);
+        if (optionalRequest.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        BloodRequest request = optionalRequest.get();
+        request.setStatus("cancelled");
+        requestRepository.save(request);
+        return ResponseEntity.ok(request);
     }
 
     @PostMapping("/requests/{requestId}/responses")
@@ -112,29 +134,99 @@ public class DonationController {
             // 2. Fire real-time update to the hospital's dashboard including the real name
             messagingTemplate.convertAndSend(
                     "/topic/requests/" + request.getRequester().getRequesterId(),
-                    "{\"requestId\": " + requestId + ", \"status\": \"matched\", \"donorName\": \"" + realDonorName + "\"}"
+                    "{\"requestId\": " + requestId + ", \"status\": \"matched\", \"donorName\": \"" + realDonorName + "\", \"donorId\": " + payload.get("donorId") + "}"
             );
         }
 
         return ResponseEntity.ok(request);
     }
 
+    @Autowired
+    private com.anish.blooddonation.repository.DonationRecordRepository donationRecordRepository;
+
     @PostMapping("/requesters")
-    public ResponseEntity<Requester> registerRequester(@RequestBody Requester requester) {
-        // Fallback password
-        if (requester.getPassword() == null || requester.getPassword().isEmpty()) {
-            requester.setPassword("password123");
-        }
+    public ResponseEntity<?> registerRequester(@RequestBody Requester requester) {
 
         // Ensure the account type matches exactly what AuthController expects for login
         requester.setAccountType("hospital_verified");
 
         try {
+            if (requester.getPassword() == null || requester.getPassword().isEmpty()) {
+                requester.setPassword("google_oauth_hospital_" + java.util.UUID.randomUUID().toString().substring(0, 8));
+            }
             Requester newRequester = requesterRepository.save(requester);
             return ResponseEntity.ok(newRequester);
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error saving requester: " + e.getMessage());
             // Returns 409 Conflict if email is already taken
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
+    }
+
+    // BD-06 & BD-09: Complete Donation and update rewards
+    @PostMapping("/donations/{requestId}/complete")
+    public ResponseEntity<com.anish.blooddonation.model.DonationRecord> completeDonation(
+            @PathVariable Long requestId,
+            @RequestBody java.util.Map<String, Long> payload) {
+        
+        Long donorId = payload.get("donorId");
+        Optional<BloodRequest> optionalRequest = requestRepository.findById(requestId);
+        Optional<Donor> optionalDonor = donorRepository.findById(donorId);
+
+        if (optionalRequest.isEmpty() || optionalDonor.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        BloodRequest request = optionalRequest.get();
+        Donor donor = optionalDonor.get();
+
+        request.setStatus("fulfilled");
+        requestRepository.save(request);
+
+        com.anish.blooddonation.model.DonationRecord record = new com.anish.blooddonation.model.DonationRecord();
+        record.setDonor(donor);
+        record.setRequest(request);
+        donationRecordRepository.save(record);
+
+        donor.setDonationCount(donor.getDonationCount() + 1);
+        donor.setLastDonationDate(java.time.LocalDateTime.now());
+        
+        // Update reward tier (BD-09)
+        int count = donor.getDonationCount();
+        if (count >= 10) donor.setRewardTier("Gold");
+        else if (count >= 5) donor.setRewardTier("Silver");
+        else if (count >= 1) donor.setRewardTier("Bronze");
+        
+        donorRepository.save(donor);
+
+        return ResponseEntity.ok(record);
+    }
+
+    // BD-06: Get Donation History
+    @GetMapping("/donors/{donorId}/history")
+    public ResponseEntity<List<com.anish.blooddonation.model.DonationRecord>> getDonationHistory(@PathVariable Long donorId) {
+        List<com.anish.blooddonation.model.DonationRecord> history = donationRecordRepository.findByDonor_DonorIdOrderByDonationDateDesc(donorId);
+        return ResponseEntity.ok(history);
+    }
+
+    // BD-06.5: Get Hospital Request History
+    @GetMapping("/hospitals/{requesterId}/history")
+    public ResponseEntity<List<BloodRequest>> getHospitalHistory(@PathVariable Long requesterId) {
+        List<BloodRequest> history = requestRepository.findByRequester_RequesterIdOrderByCreatedAtDesc(requesterId);
+        return ResponseEntity.ok(history);
+    }
+    
+    // BD-11: Get Active Requests for Map
+    @GetMapping("/requests/active")
+    public ResponseEntity<List<BloodRequest>> getActiveRequests() {
+        return ResponseEntity.ok(requestRepository.findByStatus("open"));
+    }
+    
+    // Fetch individual donor by ID for getting updated tier/count
+    @GetMapping("/donors/{donorId}")
+    public ResponseEntity<Donor> getDonorById(@PathVariable Long donorId) {
+        Optional<Donor> donor = donorRepository.findById(donorId);
+        return donor.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
