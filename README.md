@@ -1,6 +1,6 @@
 ﻿<div align="center">
-  <h1>PulseNode 🩸</h1>
-  <p><em>The modern network for saving lives.</em></p>
+  <h1>PulseNode 🩸 | Intelligent Blood Response Network</h1>
+  <p><em>Real-time coordination between hospitals and eligible blood donors.</em></p>
   
   [![Frontend Status](https://img.shields.io/badge/Frontend-Vercel-black?style=for-the-badge&logo=vercel)](https://pulse-node-frontend.vercel.app)
   [![Backend Status](https://img.shields.io/badge/Backend-Render-purple?style=for-the-badge&logo=render)](https://pulsenode-backend.onrender.com)
