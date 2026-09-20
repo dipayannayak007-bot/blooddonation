@@ -6,6 +6,7 @@ import com.anish.blooddonation.repository.DonorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class AnalyticsController {
     private DonationRecordRepository donationRecordRepository;
 
     @GetMapping("/hospital/{hospitalId}")
+    @Cacheable(value = "hospitalAnalytics", key = "#hospitalId")
     public ResponseEntity<Map<String, Object>> getHospitalAnalytics(@PathVariable Long hospitalId) {
         long totalRequests = requestRepository.countByRequester_RequesterId(hospitalId);
         long fulfilledRequests = requestRepository.countByRequester_RequesterIdAndStatus(hospitalId, "fulfilled");
@@ -41,6 +43,7 @@ public class AnalyticsController {
     }
 
     @GetMapping("/admin")
+    @Cacheable(value = "adminAnalytics")
     public ResponseEntity<Map<String, Object>> getAdminAnalytics() {
         long totalDonors = donorRepository.count();
         long activeDonors = donorRepository.countByVerificationStatus("verified");

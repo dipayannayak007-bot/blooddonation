@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,7 @@ public class DonationController {
 
     // BD-01a: Register Donor[cite: 3]
     @PostMapping("/donors")
+    @CacheEvict(value = "adminAnalytics", allEntries = true)
     public ResponseEntity<?> registerDonor(@RequestBody Donor donor) {
 
         try {
@@ -76,6 +78,7 @@ public class DonationController {
 
     // BD-02: Submit Blood Request[cite: 3]
     @PostMapping("/requests")
+    @CacheEvict(value = {"adminAnalytics", "hospitalAnalytics"}, allEntries = true)
     public ResponseEntity<BloodRequest> createRequest(@RequestBody BloodRequest request) {
         BloodRequest savedRequest = requestRepository.save(request);
 
@@ -166,6 +169,7 @@ public class DonationController {
 
     // BD-06 & BD-09: Complete Donation and update rewards
     @PostMapping("/donations/{requestId}/complete")
+    @CacheEvict(value = {"adminAnalytics", "hospitalAnalytics"}, allEntries = true)
     public ResponseEntity<com.anish.blooddonation.model.DonationRecord> completeDonation(
             @PathVariable Long requestId,
             @RequestBody java.util.Map<String, Long> payload) {
