@@ -102,7 +102,7 @@ export default function App() {
 
   if (currentView === "login") {
     return (
-      <div className="min-h-screen font-sans flex overflow-hidden bg-white">
+      <div className="min-h-screen font-sans flex overflow-hidden bg-gradient-to-br from-rose-50 via-white to-slate-100">
         {/* Left Side: Hero Section */}
         <div className="hidden lg:flex w-[55%] bg-[#151515] text-white p-16 flex-col justify-between relative overflow-hidden">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-rose-500/10 rounded-full blur-[100px] -mr-40 -mt-40"></div>
@@ -151,7 +151,7 @@ export default function App() {
         </div>
 
         {/* Right Side: Login Panel */}
-        <div className="w-full lg:w-[45%] flex flex-col items-center justify-center p-4 md:p-8 bg-zinc-50 relative overflow-y-auto">
+        <div className="w-full lg:w-[45%] flex flex-col items-center justify-center p-4 md:p-8 bg-gradient-to-br from-white via-rose-50/70 to-slate-100 relative overflow-y-auto">
           
           {/* Mobile Hero (Hidden on Desktop) */}
           <div className="lg:hidden text-center mb-8 mt-4 w-full px-4">
@@ -305,7 +305,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F5F7] font-sans flex flex-col md:flex-row overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-rose-50/70 font-sans flex flex-col md:flex-row overflow-hidden relative">
       <Sidebar
         role={currentView}
         onLogout={() => {
