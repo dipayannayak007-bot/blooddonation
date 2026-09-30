@@ -15,6 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Coordinates donor matching and the notification flow for new blood requests.
+ * The service persists each match and its SOS notification before publishing
+ * a donor-specific real-time alert through Spring WebSocket messaging.
+ */
 @Service
 public class MatchingService {
 
@@ -29,6 +34,11 @@ public class MatchingService {
     @Autowired
     private SOSNotificationRepository notificationRepository;
 
+    /**
+     * Processes a newly created blood request by retrieving eligible donors,
+     * recording each match, creating an SOS notification, and publishing the
+     * alert to the matched donor's WebSocket topic.
+     */
     @Transactional
     public void processNewRequest(BloodRequest request) {
         List<Donor> matchedDonors = donorRepository.findEligibleDonorsNearby(
