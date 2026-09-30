@@ -9,6 +9,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository layer for donor persistence and donor lookup operations.
+ * Spring Data JPA supplies the standard CRUD methods inherited below.
+ */
 public interface DonorRepository extends JpaRepository<Donor, Long> {
 
     long countByVerificationStatus(String status);
