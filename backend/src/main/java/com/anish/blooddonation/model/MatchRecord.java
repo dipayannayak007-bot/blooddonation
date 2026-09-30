@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+/**
+ * Persists the relationship between a blood request and a matched donor.
+ * This record also keeps compatibility, distance, and creation-time details.
+ */
 @Data
 @Entity
 public class MatchRecord {
